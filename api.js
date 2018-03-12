@@ -87,7 +87,9 @@ class Api {
       uri: `${this.endpoint}/avContent`,
       body: {
         method: 'getPlayingContentInfo',
-        params: [],
+        params: [{
+          output: ''
+        }],
         version: '1.2'
       },
       json: true
