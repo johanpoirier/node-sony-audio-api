@@ -11,7 +11,7 @@ class Api {
       method: 'POST',
       uri: `${this.endpoint}/system`,
       body: {
-        id: 55,
+        id: 1,
         method: 'setPowerStatus',
         params: [{ status: 'active' }],
         version: '1.1'
@@ -31,7 +31,7 @@ class Api {
       method: 'POST',
       uri: `${this.endpoint}/system`,
       body: {
-        id: 55,
+        id: 1,
         method: 'setPowerStatus',
         params: [{ status: 'off' }],
         version: '1.1'
@@ -48,20 +48,17 @@ class Api {
 
   getPowerStatus() {
     const options = {
-      method: 'GET',
+      method: 'POST',
       uri: `${this.endpoint}/system`,
       body: {
         method: 'getPowerStatus',
+        params: [],
         version: '1.1'
       },
       json: true
     };
 
-    return request(options).then(response => {
-      if (response.error) {
-        return Promise.reject(`Getting power status failed: ${JSON.stringify(response.error)}`);
-      }
-    });
+    return requestAndResponse(options, 'Getting power status');
   }
 
   audioService() {
@@ -69,7 +66,6 @@ class Api {
       method: 'POST',
       uri: `${this.endpoint}/avContent`,
       body: {
-        id: 47,
         method: 'setPlayContent',
         params: [
           {
@@ -82,30 +78,22 @@ class Api {
       json: true
     };
 
-    return request(options).then(response => {
-      if (response.error) {
-        return Promise.reject(`Switching to audio service failed: ${JSON.stringify(response.error)}`);
-      }
-    });
+    return requestAndResponse(options, 'Switching to audio service');
   }
 
   getVolume() {
     const options = {
-      method: 'GET',
+      method: 'POST',
       uri: `${this.endpoint}/audio`,
       body: {
-        id: 33,
         method: 'getVolumeInformation',
+        params: [],
         version: '1.1'
       },
       json: true
     };
 
-    return request(options).then(response => {
-      if (response.error) {
-        return Promise.reject(`Getting volume failed: ${JSON.stringify(response.error)}`);
-      }
-    });
+    return requestAndResponse(options, 'Getting volume');
   }
 
   setVolume(volume) {
@@ -113,7 +101,6 @@ class Api {
       method: 'POST',
       uri: `${this.endpoint}/audio`,
       body: {
-        id: 98,
         method: 'setAudioVolume',
         params: [{ volume: `${volume}` }],
         version: '1.1'
@@ -121,11 +108,7 @@ class Api {
       json: true
     };
 
-    return request(options).then(response => {
-      if (response.error) {
-        return Promise.reject(`Setting volume failed: ${JSON.stringify(response.error)}`);
-      }
-    });
+    return requestAndResponse(options, 'Setting volume');
   }
 
   mute() {
@@ -133,7 +116,6 @@ class Api {
       method: 'POST',
       uri: `${this.endpoint}/audio`,
       body: {
-        id: 601,
         method: 'setAudioMute',
         params: [{ mute: 'on' }],
         version: '1.1'
@@ -141,11 +123,7 @@ class Api {
       json: true
     };
 
-    return request(options).then(response => {
-      if (response.error) {
-        return Promise.reject(`Muting failed: ${JSON.stringify(response.error)}`);
-      }
-    });
+    return requestAndResponse(options, 'Muting');
   }
 
   unmute() {
@@ -153,7 +131,6 @@ class Api {
       method: 'POST',
       uri: `${this.endpoint}/audio`,
       body: {
-        id: 601,
         method: 'setAudioMute',
         params: [{ mute: 'off' }],
         version: '1.1'
@@ -161,11 +138,7 @@ class Api {
       json: true
     };
 
-    return request(options).then(response => {
-      if (response.error) {
-        return Promise.reject(`Unmuting failed: ${JSON.stringify(response.error)}`);
-      }
-    });
+    return requestAndResponse(options, 'Unmuting');
   }
 
   getAllSoundSettings() {
@@ -174,7 +147,7 @@ class Api {
 
   getSoundSettings(target) {
     const options = {
-      method: 'GET',
+      method: 'POST',
       uri: `${this.endpoint}/audio`,
       body: {
         method: 'getSoundSettings',
@@ -184,12 +157,18 @@ class Api {
       json: true
     };
 
-    return request(options).then(response => {
-      if (response.error) {
-        return Promise.reject(`Getting sound settings failed: ${JSON.stringify(response.error)}`);
-      }
-    });
+    return requestAndResponse(options, 'Getting sound settings');
   }
+}
+
+function requestAndResponse(options, label) {
+  options.body['id'] = 1;
+  return request(options).then(response => {
+    if (response.error) {
+      return Promise.reject(`${label}: ${JSON.stringify(response.error)}`);
+    }
+    return response;
+  });
 }
 
 module.exports = Api;
