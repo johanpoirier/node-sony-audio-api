@@ -167,7 +167,7 @@ function requestAndResponse(options, label) {
     if (response.error) {
       return Promise.reject(`${label}: ${JSON.stringify(response.error)}`);
     }
-    return response;
+    return response.result;
   });
 }
 
