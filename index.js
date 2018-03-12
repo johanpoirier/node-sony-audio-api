@@ -15,3 +15,6 @@ const api = new Api(`http://${process.env.DEVICE_IP}:10000/sony`);
 
 // Power Status
 api.getPowerStatus().then(console.log);
+
+// Sound setting
+api.setClearAudioPlusSoundField().then(console.log);

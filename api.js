@@ -151,13 +151,52 @@ class Api {
       uri: `${this.endpoint}/audio`,
       body: {
         method: 'getSoundSettings',
-        params:[ { target } ],
+        params: [{ target }],
         version: '1.1'
       },
       json: true
     };
 
     return requestAndResponse(options, 'Getting sound settings');
+  }
+
+  setSoundSetting(target, value) {
+    const options = {
+      method: 'POST',
+      uri: `${this.endpoint}/audio`,
+      body: {
+        method: 'setSoundSettings',
+        params: [{
+          settings: [{
+            target,
+            value
+          }]
+        }],
+        version: '1.1'
+      },
+      json: true
+    };
+
+    return requestAndResponse(options, 'Getting sound settings');
+  }
+
+  setMusicSoundField() {
+    return this.setSoundSetting('soundField', 'music');
+  }
+
+  setMovieSoundField() {
+    return this.setSoundSetting('soundField', 'movie');
+  }
+
+  setClearAudioPlusSoundField() {
+    return this.setSoundSetting('soundField', 'clearAudio');
+  }
+
+  setVoiceUp(value) {
+    if (value < 0 || value > 2) {
+      value = 0;
+    }
+    return this.setSoundSetting('voice', `type${value}`);
   }
 }
 
