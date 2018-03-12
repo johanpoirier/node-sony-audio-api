@@ -81,6 +81,21 @@ class Api {
     return requestAndResponse(options, 'Switching to audio service');
   }
 
+  getPlayingContentInfo() {
+    const options = {
+      method: 'POST',
+      uri: `${this.endpoint}/avContent`,
+      body: {
+        method: 'getPlayingContentInfo',
+        params: [],
+        version: '1.2'
+      },
+      json: true
+    };
+
+    return requestAndResponse(options, 'Playing content info');
+  }
+
   getVolume() {
     const options = {
       method: 'POST',
@@ -177,7 +192,7 @@ class Api {
       json: true
     };
 
-    return requestAndResponse(options, 'Getting sound settings');
+    return requestAndResponse(options, `Setting sound setting ${target}=${value}`);
   }
 
   setMusicSoundField() {
@@ -197,6 +212,14 @@ class Api {
       value = 0;
     }
     return this.setSoundSetting('voice', `type${value}`);
+  }
+
+  setNightModeOn() {
+    return this.setSoundSetting('nightMode', 'on');
+  }
+
+  setNightModeOff() {
+    return this.setSoundSetting('nightMode', 'off');
   }
 }
 

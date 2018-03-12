@@ -7,14 +7,23 @@ if (!process.env.DEVICE_IP) {
 
 const api = new Api(`http://${process.env.DEVICE_IP}:10000/sony`);
 
-// Power On + Volume + Audio Service
-// api.powerOn()
-//   .then(() => api.setVolume(8))
-//   .then(() => api.audioService())
-//   .catch(error => console.log('Something gone very bad', error));
-
 // Power Status
-api.getPowerStatus().then(console.log);
+//api.getPowerStatus().then(console.log);
 
-// Sound setting
-api.setClearAudioPlusSoundField().then(console.log);
+// Spotify Mode
+// api.setVolume(0)
+//   .then(() => api.setMusicSoundField())
+//   .then(() => api.setNightModeOff())
+//   .then(() => api.setVoiceUp(0))
+//   .then(() => api.setVolume(8))
+//   .then(() => api.audioService());
+
+// TV Mode
+// api.setVolume(0)
+//   .then(() => api.setClearAudioPlusSoundField())
+//   .then(() => api.setNightModeOff())
+//   .then(() => api.setVoiceUp(2))
+//   .then(() => api.setVolume(50));
+
+
+api.getPlayingContentInfo().then(console.log);
