@@ -1,6 +1,6 @@
 {
   "name": "node-sony-audio-api",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Node.js implementation of the Sony Audio API",
   "main": "api.js",
   "dependencies": {

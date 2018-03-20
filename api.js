@@ -81,6 +81,30 @@ class Api {
     return requestAndResponse(options, 'Switching to audio service');
   }
 
+  hdmiService(port = 1) {
+    if (port < 1 || port > 4) {
+      port = 1;
+    }
+
+    const options = {
+      method: 'POST',
+      uri: `${this.endpoint}/avContent`,
+      body: {
+        method: 'setPlayContent',
+        params: [
+          {
+            output: '',
+            uri: `extInput:hdmi?port=${port}`
+          }
+        ],
+        version: '1.2'
+      },
+      json: true
+    };
+
+    return requestAndResponse(options, `Switching to HDMI ${port}`);
+  }
+
   playNextContent() {
     const options = {
       method: 'POST',

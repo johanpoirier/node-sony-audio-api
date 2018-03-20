@@ -19,11 +19,9 @@ const api = new Api(`http://${process.env.DEVICE_IP}:10000/sony`);
 //   .then(() => api.audioService());
 
 // TV Mode
-// api.setVolume(0)
-//   .then(() => api.setClearAudioPlusSoundField())
-//   .then(() => api.setNightModeOff())
-//   .then(() => api.setVoiceUp(2))
-//   .then(() => api.setVolume(50));
-
-
-api.getPlayingContentInfo().then(console.log);
+api.setVolume(0)
+  .then(() => api.setClearAudioPlusSoundField())
+  .then(() => api.setNightModeOff())
+  .then(() => api.setVoiceUp(2))
+  .then(() => api.hdmiService(1))
+  .then(() => api.setVolume(45));
