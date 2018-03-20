@@ -81,6 +81,23 @@ class Api {
     return requestAndResponse(options, 'Switching to audio service');
   }
 
+  playNextContent() {
+    const options = {
+      method: 'POST',
+      uri: `${this.endpoint}/avContent`,
+      body: {
+        method: 'setPlayNextContent',
+        params: [{
+          output: ''
+        }],
+        version: '1.0'
+      },
+      json: true
+    };
+
+    return requestAndResponse(options, 'Play next content');
+  }
+
   getPlayingContentInfo() {
     const options = {
       method: 'POST',
@@ -210,8 +227,8 @@ class Api {
   }
 
   setVoiceUp(value) {
-    if (value < 0 || value > 2) {
-      value = 0;
+    if (value < 1 || value > 3) {
+      value = 1;
     }
     return this.setSoundSetting('voice', `type${value}`);
   }
