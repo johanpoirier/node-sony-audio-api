@@ -29,7 +29,9 @@ if (!process.env.DEVICE_IP) {
 const listenToPowerStatusChange = async function() {
   const apiNotifications = new ApiNotifications(`${process.env.DEVICE_IP}:10000`);
   await apiNotifications.start();
-  apiNotifications.subscribeToPowerChange(msg => console.log('Power status changed', msg));
+  apiNotifications.subscribeToPowerChange(msg => {
+    console.log('Power status changed', msg);
+  });
 };
 
 listenToPowerStatusChange().catch(console.error);

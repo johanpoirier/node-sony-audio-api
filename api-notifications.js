@@ -32,19 +32,14 @@ class ApiNotifications {
                 connection.on('message', message => {
                     if (message.type === 'utf8') {
                         const msg = JSON.parse(message.utf8Data);
-
-                        if (msg.id === POWER_STATUS_ID) {
-                            if (this.subscribers[POWER_STATUS_ID]) {
-                                this.subscribers[POWER_STATUS_ID].forEach(subscriber => subscriber(msg));
-                            }
-                        } else {
-                            console.log("Received: '" + message.utf8Data + "'");
-                        }
+                        console.log('Received:', msg);
+                    } else {
+                        console.dir(message);
                     }
                 });
             });
 
-            client.connect(`ws://${this.endpoint}/sony/avContent`);
+            client.connect(`ws://${this.endpoint}/sony/system`);
         });
     }
 
@@ -60,8 +55,8 @@ class ApiNotifications {
 
         this.subscribers[POWER_STATUS_ID].push(callback);
         this.connection.sendUTF(JSON.stringify(switchNotifications(POWER_STATUS_ID, [], [{
-            name: 'notifyPowerStatus',
-            version: '1.0'
+            "name": "notifyPowerStatus",
+            "version": "1.0"
         }])));
     }
 }
@@ -69,7 +64,7 @@ class ApiNotifications {
 function switchNotifications(id, disable, enable) {
     return {
         method: 'switchNotifications',
-        id: id,
+        id,
         params: [{
             disabled: disable,
             enabled: enable
