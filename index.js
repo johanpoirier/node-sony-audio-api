@@ -6,7 +6,7 @@ if (!process.env.DEVICE_IP) {
   process.exit();
 }
 
-const api = new Api(`http://${process.env.DEVICE_IP}:10000/sony`);
+// const api = new Api(`http://${process.env.DEVICE_IP}:10000/sony`);
 
 // Power Status
 //api.getPowerStatus().then(console.log);
@@ -20,14 +20,14 @@ const api = new Api(`http://${process.env.DEVICE_IP}:10000/sony`);
 //   .then(() => api.audioService());
 
 // TV Mode
-api.setVolume(0)
-  .then(() => api.setClearAudioPlusSoundField())
-  .then(() => api.setNightModeOff())
-  .then(() => api.setVoiceUp(2))
-  .then(() => api.hdmiService(1))
-  .then(() => api.setVolume(45));
+// api.setVolume(0)
+//   .then(() => api.setClearAudioPlusSoundField())
+//   .then(() => api.setNightModeOff())
+//   .then(() => api.setVoiceUp(2))
+//   .then(() => api.hdmiService(1))
+//   .then(() => api.setVolume(45));
 
 
 const apiNotifications = new ApiNotifications(`${process.env.DEVICE_IP}:10000`);
 apiNotifications.start();
-
+apiNotifications.subscribeToPowerChange(msg => console.log('Power status changed', msg));

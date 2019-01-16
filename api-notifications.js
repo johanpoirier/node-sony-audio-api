@@ -1,9 +1,14 @@
 const WebSocketClient = require('websocket').client;
 
+const POWER_STATUS_ID = 10;
+
 class ApiNotifications {
 
     constructor(endpoint) {
         this.endpoint = endpoint;
+        this.connection = null;
+        this.subscribers = {};
+        this.subscribers[POWER_STATUS_ID] = [];
     }
 
     start() {
@@ -14,45 +19,44 @@ class ApiNotifications {
         });
 
         client.on('connect', function (connection) {
+            this.connection = connection;
+
             console.log('WebSocket Client Connected');
+
             connection.on('error', function (error) {
                 console.log("Connection Error: " + error.toString());
             });
+
             connection.on('close', function () {
                 console.log('WebSocket Connection Closed');
             });
+
             connection.on('message', function (message) {
                 if (message.type === 'utf8') {
-                    var msg = JSON.parse(message.utf8Data);
-                    // Check whether the message ID equals '1', to avoid creating a loop.
-                    if (msg.id == 1) {
-                        let all_notifications = msg.result[0].disabled.concat(msg.result[0].enabled);
-                        var enable = [];
-                        var disable = [];
-                        // Enable only the 'notifyPlayingContentInfo' notifications.
-                        all_notifications.forEach(
-                            item => item.name == "notifyPlayingContentInfo"
-                                ? enable.push(item) : disable.push(item));
-                        // Use a different ID than '1', to avoid creating a loop.
-                        connection.sendUTF(JSON.stringify(switchNotifications(2, disable, enable)));
+                    const msg = JSON.parse(message.utf8Data);
+
+                    if (msg.id === POWER_STATUS_ID) {
+                        if (this.subscribers[POWER_STATUS_ID]) {
+                            this.subscribers[POWER_STATUS_ID].forEach(subscriber => subscriber(msg));
+                        }
                     } else {
                         console.log("Received: '" + message.utf8Data + "'");
                     }
                 }
             });
-
-            function subscribe() {
-                if (connection.connected) {
-                    // To get current notification settings, send an empty 'switchNotifications'
-                    // message with an ID of '1'.
-                    connection.sendUTF(JSON.stringify(switchNotifications(1, [], [])));
-                }
-            }
-
-            subscribe();
         });
 
         client.connect(`ws://${this.endpoint}/sony/avContent`);
+    }
+
+    subscribeToPowerChange(callback) {
+        if (this.connection && this.connection.connected) {
+            this.subscribers[POWER_STATUS_ID].push(callback);
+            connection.sendUTF(JSON.stringify(switchNotifications(POWER_STATUS_ID, [], [{
+                name: 'notifyPowerStatus',
+                version: '1.0'
+            }])));
+        }
     }
 }
 
