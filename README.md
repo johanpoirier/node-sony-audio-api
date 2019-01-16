@@ -1,7 +1,7 @@
 ## What's this?
 
 This is a partial implementation of the Sony Audio API for node.js.
-You can find the official API reference on the Sony website: https://developer.sony.com/develop/audio-control-api/hardware-overview/api-references
+You can find the official API reference on the Sony website: https://developer.sony.com/develop/audio-control-api/api-references/api-overview-2
 
 ## Tech stuff
 
