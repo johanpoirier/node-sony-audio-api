@@ -1,7 +1,9 @@
 const WebSocketClient = require('websocket').client;
 
-const SYSTEM_NOTIFICATIONS_ID = 10;
-const POWER_STATUS_ID = 11;
+const SYSTEM_NOTIFICATIONS_MESSAGE_ID = 10;
+const POWER_STATUS_MESSAGE_ID = 11;
+
+const POWER_STATUS_METHOD = 'notifyPowerStatus';
 
 class ApiNotifications {
 
@@ -9,7 +11,7 @@ class ApiNotifications {
         this.endpoint = endpoint;
         this.connection = null;
         this.subscribers = {};
-        this.subscribers[POWER_STATUS_ID] = [];
+        this.subscribers[POWER_STATUS_METHOD] = [];
     }
 
     start() {
@@ -33,10 +35,11 @@ class ApiNotifications {
                 connection.on('message', message => {
                     if (message.type === 'utf8') {
                         const msg = JSON.parse(message.utf8Data);
-                        console.log(`Received message ${msg.id}`, msg.result);
-                    } else {
-                        console.dir(message);
+                        if (msg.method && msg.method === POWER_STATUS_METHOD) {
+                            this.subscribers[POWER_STATUS_METHOD].forEach(cb => cb(msg.params));
+                        }
                     }
+                    console.dir(message);
                 });
             });
 
@@ -57,21 +60,21 @@ class ApiNotifications {
         const onPowerStatusMessage = message => {
             if (message.type === 'utf8') {
                 const msg = JSON.parse(message.utf8Data);
-                if (msg.id === SYSTEM_NOTIFICATIONS_ID) {
+                if (msg.id === SYSTEM_NOTIFICATIONS_MESSAGE_ID) {
                     const allSystemNotifications = msg.result[0].disabled.concat(msg.result[0].enabled);
                     const enable = [];
                     const disable = [];
 
                     allSystemNotifications.forEach(item => item.name === 'notifyPowerStatus' ? enable.push(item) : disable.push(item));
-                    this.connection.sendUTF(JSON.stringify(switchNotifications(POWER_STATUS_ID, disable, enable)));
-                } else if (msg.id === POWER_STATUS_ID) {
-                    this.subscribers[POWER_STATUS_ID].push(callback);
+                    this.connection.sendUTF(JSON.stringify(switchNotifications(POWER_STATUS_MESSAGE_ID, disable, enable)));
+                } else if (msg.id === POWER_STATUS_MESSAGE_ID) {
+                    this.subscribers[POWER_STATUS_METHOD].push(callback);
                 }
             }
         };
 
         this.connection.on('message', onPowerStatusMessage);
-        this.connection.sendUTF(JSON.stringify(switchNotifications(SYSTEM_NOTIFICATIONS_ID, [], [])));
+        this.connection.sendUTF(JSON.stringify(switchNotifications(SYSTEM_NOTIFICATIONS_MESSAGE_ID, [], [])));
     }
 }
 
