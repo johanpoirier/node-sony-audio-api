@@ -53,11 +53,25 @@ class ApiNotifications {
             return;
         }
 
+        const onPowerStatusMessage = message => {
+            if (message.type === 'utf8') {
+                const msg = JSON.parse(message.utf8Data);
+                if (msg.id === POWER_STATUS_ID) {
+                    const allSystemNotifications = msg.result[0].disabled.concat(msg.result[0].enabled);
+                    const enable = [];
+                    const disable = [];
+
+                    allSystemNotifications.forEach(item => item.name === 'notifyPowerStatus' ? enable.push(item) : disable.push(item));
+                    this.connection.sendUTF(JSON.stringify(switchNotifications(POWER_STATUS_ID, disable, enable)));
+                    this.connection.off('message', onPowerStatusMessage);
+                }
+            }
+        };
+
+        this.connection.on('message', onPowerStatusMessage);
+        this.connection.sendUTF(JSON.stringify(switchNotifications(POWER_STATUS_ID, [], [])));
+
         this.subscribers[POWER_STATUS_ID].push(callback);
-        this.connection.sendUTF(JSON.stringify(switchNotifications(POWER_STATUS_ID, [], [{
-            "name": "notifyPowerStatus",
-            "version": "1.0"
-        }])));
     }
 }
 
