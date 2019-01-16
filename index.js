@@ -1,4 +1,5 @@
 const Api = require('./api');
+const ApiNotifications = require('./api-notifications');
 
 if (!process.env.DEVICE_IP) {
   console.log('Please set the IP address of your Sony audio device like this: DEVICE_IP=192.168.X.X node index.js');
@@ -25,3 +26,8 @@ api.setVolume(0)
   .then(() => api.setVoiceUp(2))
   .then(() => api.hdmiService(1))
   .then(() => api.setVolume(45));
+
+
+const apiNotifications = new ApiNotifications(`${process.env.DEVICE_IP}:10000`);
+apiNotifications.start();
+
