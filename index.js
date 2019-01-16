@@ -1,4 +1,4 @@
-const Api = require('./api');
+//const Api = require('./api');
 const ApiNotifications = require('./api-notifications');
 
 if (!process.env.DEVICE_IP) {
@@ -26,8 +26,10 @@ if (!process.env.DEVICE_IP) {
 //   .then(() => api.setVoiceUp(2))
 //   .then(() => api.hdmiService(1))
 //   .then(() => api.setVolume(45));
+const listenToPowerStatusChange = async function() {
+  const apiNotifications = new ApiNotifications(`${process.env.DEVICE_IP}:10000`);
+  await apiNotifications.start();
+  apiNotifications.subscribeToPowerChange(msg => console.log('Power status changed', msg));
+};
 
-
-const apiNotifications = new ApiNotifications(`${process.env.DEVICE_IP}:10000`);
-apiNotifications.start();
-apiNotifications.subscribeToPowerChange(msg => console.log('Power status changed', msg));
+listenToPowerStatusChange().catch(console.error);
