@@ -5,7 +5,7 @@ You can find the official API reference on the Sony website: https://developer.s
 
 ## Tech stuff
 
-The API is base on Promises.
+The API is based on Promises.
 
 ## Usage
 
