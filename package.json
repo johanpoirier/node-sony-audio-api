@@ -4,8 +4,9 @@
   "description": "Node.js implementation of the Sony Audio API",
   "main": "api.js",
   "dependencies": {
-    "request": "^2.83.0",
-    "request-promise-native": "^1.0.5"
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.5",
+    "websocket": "^1.0.28"
   },
   "repository": {
     "type": "git",
