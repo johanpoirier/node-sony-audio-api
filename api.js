@@ -21,7 +21,7 @@ class Api {
 
     return request(options).then(response => {
       if (response.error) {
-        console.log('Already powered on');
+        log('Already powered on');
       }
     });
   }
@@ -41,7 +41,7 @@ class Api {
 
     return request(options).then(response => {
       if (response.error) {
-        console.log('Already powered off');
+        log('Already powered off');
       }
     });
   }
@@ -277,3 +277,8 @@ function requestAndResponse(options, label) {
 }
 
 module.exports = Api;
+
+function log(message) {
+  const now = (new Date()).toISOString();
+  console.log(`${now} [api] ${message}`);
+}

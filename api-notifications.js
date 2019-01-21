@@ -19,7 +19,7 @@ class ApiNotifications {
             const client = new WebSocketClient();
 
             client.on('connectFailed', error => {
-                console.log('Connect Error: ' + error.toString());
+                log('Connect Error: ' + error.toString());
                 reject("Connect Error: " + error.toString());
             });
 
@@ -27,10 +27,10 @@ class ApiNotifications {
                 this.connection = connection;
                 resolve();
 
-                console.log('WebSocket Client Connected');
+                log('WebSocket Client Connected');
 
-                connection.on('error', error => console.log("Connection Error: " + error.toString()));
-                connection.on('close', () => console.log('WebSocket Connection Closed'));
+                connection.on('error', error => log('Connection Error: ' + error.toString()));
+                connection.on('close', () => log('WebSocket Connection Closed'));
 
                 connection.on('message', message => {
                     if (message.type === 'utf8') {
@@ -39,7 +39,7 @@ class ApiNotifications {
                             this.subscribers[POWER_STATUS_METHOD].forEach(cb => cb(msg.params));
                         }
                     }
-                    console.dir(message);
+                    log(message);
                 });
             });
 
@@ -49,11 +49,11 @@ class ApiNotifications {
 
     subscribeToPowerChange(callback) {
         if (!this.connection) {
-            console.error('No ws connection available');
+            log('No ws connection available');
             return;
         }
         if (!this.connection.connected) {
-            console.error('Not connected to ws');
+            log('Not connected to ws');
             return;
         }
 
@@ -91,3 +91,8 @@ function switchNotifications(id, disable, enable) {
 }
 
 module.exports = ApiNotifications;
+
+function log(message) {
+    const now = (new Date()).toISOString();
+    console.log(`${now} [notifications] ${message}`);
+}
