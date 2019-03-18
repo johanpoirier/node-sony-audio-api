@@ -61,29 +61,17 @@ class Api {
     return requestAndResponse(options, 'Getting power status');
   }
 
-  audioService() {
-    const options = {
-      method: 'POST',
-      uri: `${this.endpoint}/avContent`,
-      body: {
-        method: 'setPlayContent',
-        params: [
-          {
-            output: '',
-            uri: 'netService:audio'
-          }
-        ],
-        version: '1.2'
-      },
-      json: true
-    };
+  setSource(scheme = 'extInput', device = 'btAudio', port = null) {
+    if (!Object.keys(Api.INPUTS).includes(scheme)) {
+      return Promise.reject(new Error(`Unknown device resource scheme: ${scheme}.`));
+    }
+    let deviceResourceUri = Api.INPUTS[scheme][device];
+    if (!Api.INPUTS[scheme].includes(device)) {
+      return Promise.reject(new Error(`Unknown device resource uri: ${scheme}:${device}.`));
+    }
 
-    return requestAndResponse(options, 'Switching to audio service');
-  }
-
-  hdmiService(port = 1) {
-    if (port < 1 || port > 4) {
-      port = 1;
+    if (port !== null) {
+      deviceResourceUri += `?port=${port}`;
     }
 
     const options = {
@@ -94,7 +82,7 @@ class Api {
         params: [
           {
             output: '',
-            uri: `extInput:hdmi?port=${port}`
+            uri: deviceResourceUri
           }
         ],
         version: '1.2'
@@ -102,7 +90,27 @@ class Api {
       json: true
     };
 
-    return requestAndResponse(options, `Switching to HDMI ${port}`);
+    return requestAndResponse(options, `Switching to ${deviceResourceUri}`);
+  }
+
+  audioService() {
+    return this.setSource('netService', 'audio');
+  }
+
+  hdmiSource(port = 1) {
+    if (port < 1 || port > 4) {
+      port = 1;
+    }
+
+    return this.setSource('extInput', 'hdmi', port);
+  }
+
+  bluetoothAudioSource() {
+    return this.setSource('extInput', 'btAudio');
+  }
+
+  dnlaAudioSource() {
+    return this.setSource('dlna', 'audio');
   }
 
   playNextContent() {
@@ -275,6 +283,16 @@ function requestAndResponse(options, label) {
     return response.result;
   });
 }
+
+Api.INPUTS = {
+  extInput: ['bd-dvd', 'btAudio', 'game', 'hdmi', 'line', 'sat-catv', 'source', 'tv', 'video', 'airPlay'],
+  dlna: ['music'],
+  storage: ['usb1'],
+  radio: ['fm'],
+  netService: ['audio'],
+  multiroom: ['audio'],
+  cast: ['audio']
+};
 
 module.exports = Api;
 
