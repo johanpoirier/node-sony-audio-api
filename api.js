@@ -94,47 +94,23 @@ class Api {
   }
 
   audioService() {
-    const options = {
-      method: 'POST',
-      uri: `${this.endpoint}/avContent`,
-      body: {
-        method: 'setPlayContent',
-        params: [
-          {
-            output: '',
-            uri: 'netService:audio'
-          }
-        ],
-        version: '1.2'
-      },
-      json: true
-    };
-
-    return requestAndResponse(options, 'Switching to audio service');
+    return this.setSource('netService', 'audio');
   }
 
-  hdmiService(port = 1) {
+  hdmiSource(port = 1) {
     if (port < 1 || port > 4) {
       port = 1;
     }
 
-    const options = {
-      method: 'POST',
-      uri: `${this.endpoint}/avContent`,
-      body: {
-        method: 'setPlayContent',
-        params: [
-          {
-            output: '',
-            uri: `extInput:hdmi?port=${port}`
-          }
-        ],
-        version: '1.2'
-      },
-      json: true
-    };
+    return this.setSource('extInput', 'hdmi', port);
+  }
 
-    return requestAndResponse(options, `Switching to HDMI ${port}`);
+  bluetoothAudioSource() {
+    return this.setSource('extInput', 'btAudio');
+  }
+
+  dnlaAudioSource() {
+    return this.setSource('dlna', 'audio');
   }
 
   playNextContent() {

@@ -9,30 +9,31 @@ if (!process.env.DEVICE_IP) {
 const api = new Api(`http://${process.env.DEVICE_IP}:10000/sony`);
 
 // Power Status
-//api.getPowerStatus().then(console.log);
+api.getPowerStatus().then(console.log);
 
 // Spotify Mode
-api.setVolume(0)
-  .then(() => api.setMusicSoundField())
-  .then(() => api.setNightModeOff())
-  .then(() => api.setVoiceUp(0))
-  .then(() => api.setVolume(8))
-  .then(() => api.setSource('netService', 'audio'));
+// api.setVolume(0)
+//   .then(() => api.setMusicSoundField())
+//   .then(() => api.setNightModeOff())
+//   .then(() => api.setVoiceUp(0))
+//   .then(() => api.setVolume(8))
+//   .then(() => api.audioService());
 
 // TV Mode
 // api.setVolume(0)
 //   .then(() => api.setClearAudioPlusSoundField())
 //   .then(() => api.setNightModeOff())
 //   .then(() => api.setVoiceUp(2))
-//   .then(() => api.hdmiService(1))
+//   .then(() => api.hdmiSource(1))
 //   .then(() => api.setVolume(45));
-const listenToPowerStatusChange = async function() {
-  const apiNotifications = new ApiNotifications(`${process.env.DEVICE_IP}:10000`);
-  await apiNotifications.start();
 
-  apiNotifications.subscribeToPowerChange(data => {
-    console.log(`Power status changed to '${data.pop().status}'`);
-  });
-};
-
-listenToPowerStatusChange().catch(console.error);
+// const listenToPowerStatusChange = async function() {
+//   const apiNotifications = new ApiNotifications(`${process.env.DEVICE_IP}:10000`);
+//   await apiNotifications.start();
+//
+//   apiNotifications.subscribeToPowerChange(data => {
+//     console.log(`Power status changed to '${data.pop().status}'`);
+//   });
+// };
+//
+// listenToPowerStatusChange().catch(console.error);
