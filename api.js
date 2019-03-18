@@ -65,11 +65,11 @@ class Api {
     if (!Object.keys(Api.INPUTS).includes(scheme)) {
       return Promise.reject(new Error(`Unknown device resource scheme: ${scheme}.`));
     }
-    let deviceResourceUri = Api.INPUTS[scheme][device];
     if (!Api.INPUTS[scheme].includes(device)) {
       return Promise.reject(new Error(`Unknown device resource uri: ${scheme}:${device}.`));
     }
 
+    let deviceResourceUri = `${scheme}:${device}`;
     if (port !== null) {
       deviceResourceUri += `?port=${port}`;
     }

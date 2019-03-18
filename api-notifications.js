@@ -25,9 +25,6 @@ class ApiNotifications {
 
             client.on('connect', connection => {
                 this.connection = connection;
-                resolve();
-
-                log('WebSocket Client Connected');
 
                 connection.on('error', error => log('Connection Error: ' + error.toString()));
                 connection.on('close', () => log('WebSocket Connection Closed'));
@@ -41,6 +38,10 @@ class ApiNotifications {
                     }
                     log(message);
                 });
+
+                log('WebSocket Client Connected');
+
+                resolve();
             });
 
             client.connect(`ws://${this.endpoint}/sony/system`);
