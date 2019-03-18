@@ -61,6 +61,38 @@ class Api {
     return requestAndResponse(options, 'Getting power status');
   }
 
+  setSource(scheme = 'extInput', device = 'btAudio', port = null) {
+    if (!Object.keys(Api.INPUTS).includes(scheme)) {
+      return Promise.reject(new Error(`Unknown device resource scheme: ${scheme}.`));
+    }
+    let deviceResourceUri = Api.INPUTS[scheme][device];
+    if (!deviceResourceUri) {
+      return Promise.reject(new Error(`Unknown device resource uri: ${scheme}:${device}.`));
+    }
+
+    if (port !== null) {
+      deviceResourceUri += `?port=${port}`;
+    }
+
+    const options = {
+      method: 'POST',
+      uri: `${this.endpoint}/avContent`,
+      body: {
+        method: 'setPlayContent',
+        params: [
+          {
+            output: '',
+            uri: deviceResourceUri
+          }
+        ],
+        version: '1.2'
+      },
+      json: true
+    };
+
+    return requestAndResponse(options, `Switching to ${deviceResourceUri}`);
+  }
+
   audioService() {
     const options = {
       method: 'POST',
@@ -275,6 +307,16 @@ function requestAndResponse(options, label) {
     return response.result;
   });
 }
+
+Api.INPUTS = {
+  extInput: ['bd-dvd', 'btAudio', 'game', 'hdmi', 'line', 'sat-catv', 'source', 'tv', 'video', 'airPlay'],
+  dlna: ['music'],
+  storage: ['usb1'],
+  radio: ['fm'],
+  netService: ['audio'],
+  multiroom: ['audio'],
+  cast: ['audio']
+};
 
 module.exports = Api;
 
