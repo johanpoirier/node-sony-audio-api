@@ -1,23 +1,23 @@
-//const Api = require('./api');
-const ApiNotifications = require('./api-notifications');
+const Api = require('./api')
+//const ApiNotifications = require('./api-notifications');
 
 if (!process.env.DEVICE_IP) {
   console.log('Please set the IP address of your Sony audio device like this: DEVICE_IP=192.168.X.X node index.js');
   process.exit();
 }
 
-// const api = new Api(`http://${process.env.DEVICE_IP}:10000/sony`);
+const api = new Api(`http://${process.env.DEVICE_IP}:10000/sony`);
 
 // Power Status
 //api.getPowerStatus().then(console.log);
 
 // Spotify Mode
-// api.setVolume(0)
-//   .then(() => api.setMusicSoundField())
-//   .then(() => api.setNightModeOff())
-//   .then(() => api.setVoiceUp(0))
-//   .then(() => api.setVolume(8))
-//   .then(() => api.audioService());
+api.setVolume(0)
+  .then(() => api.setMusicSoundField())
+  .then(() => api.setNightModeOff())
+  .then(() => api.setVoiceUp(0))
+  .then(() => api.setVolume(8))
+  .then(() => api.setSource('netService', 'audio'));
 
 // TV Mode
 // api.setVolume(0)
