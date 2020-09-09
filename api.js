@@ -13,7 +13,7 @@ class Api {
       body: {
         id: 1,
         method: 'setPowerStatus',
-        params: [{ status: 'active' }],
+        params: [{status: 'active'}],
         version: '1.1'
       },
       json: true
@@ -33,7 +33,7 @@ class Api {
       body: {
         id: 1,
         method: 'setPowerStatus',
-        params: [{ status: 'off' }],
+        params: [{status: 'off'}],
         version: '1.1'
       },
       json: true
@@ -153,7 +153,9 @@ class Api {
       uri: `${this.endpoint}/audio`,
       body: {
         method: 'getVolumeInformation',
-        params: [],
+        params: [{
+          output: ''
+        }],
         version: '1.1'
       },
       json: true
@@ -168,7 +170,9 @@ class Api {
       uri: `${this.endpoint}/audio`,
       body: {
         method: 'setAudioVolume',
-        params: [{ volume: `${volume}` }],
+        params: [{
+          volume: `${volume}`
+        }],
         version: '1.1'
       },
       json: true
@@ -183,7 +187,9 @@ class Api {
       uri: `${this.endpoint}/audio`,
       body: {
         method: 'setAudioMute',
-        params: [{ mute: 'on' }],
+        params: [{
+          mute: 'on'
+        }],
         version: '1.1'
       },
       json: true
@@ -198,7 +204,9 @@ class Api {
       uri: `${this.endpoint}/audio`,
       body: {
         method: 'setAudioMute',
-        params: [{ mute: 'off' }],
+        params: [{
+          mute: 'off'
+        }],
         version: '1.1'
       },
       json: true
@@ -217,7 +225,7 @@ class Api {
       uri: `${this.endpoint}/audio`,
       body: {
         method: 'getSoundSettings',
-        params: [{ target }],
+        params: [{target}],
         version: '1.1'
       },
       json: true
@@ -274,14 +282,13 @@ class Api {
   }
 }
 
-function requestAndResponse(options, label) {
+async function requestAndResponse(options, label) {
   options.body['id'] = 1;
-  return request(options).then(response => {
-    if (response.error) {
-      return Promise.reject(`${label}: ${JSON.stringify(response.error)}`);
-    }
-    return response.result;
-  });
+  const response = await request(options);
+  if (response.error) {
+    throw new Error(`${label}: ${JSON.stringify(response.error)}`);
+  }
+  return response.result;
 }
 
 Api.INPUTS = {
