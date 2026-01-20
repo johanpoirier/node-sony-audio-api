@@ -6,7 +6,7 @@ if (!process.env.DEVICE_IP) {
   process.exit();
 }
 
-const apiClient = new SonyRpcApi(`http://${process.env.DEVICE_IP}:10000/sony`);
+const apiClient = new SonyRpcApi(process.env.DEVICE_IP, 10000);
 
 // Power Status
 const powerStatus = await apiClient.getPowerStatus();
@@ -17,7 +17,7 @@ const playingContent = await apiClient.getPlayingContentInfo();
 console.log(playingContent);
 
 // Current content
-const volume = await apiClient.getVolume();
+const volume = await apiClient.getVolumeInformation();
 console.log(volume);
 
 // Spotify Mode
