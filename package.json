@@ -1,18 +1,17 @@
 {
   "name": "node-sony-audio-api",
-  "version": "0.2.2",
+  "type": "module",
+  "version": "0.2.3",
   "description": "Node.js implementation of the Sony Audio API",
-  "main": "api.js",
+  "main": "index.js",
   "dependencies": {
-    "request": "^2.88.0",
-    "request-promise-native": "^1.0.7",
-    "websocket": "^1.0.28"
+    "ws": "^8.19.0"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/johanpoirier/node-sony-audio-api.git"
   },
-  "author": "Johan Poirier <johan.poirier@gmail.com> (https://twitter.com/johanpoirier)",
+  "author": "Johan Poirier <johan.poirier@gmail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/johanpoirier/node-sony-audio-api/issues"

@@ -10,7 +10,7 @@ The API is based on Promises.
 ## Usage
 
 ```javascript
-const api = new Api(`http://${process.env.DEVICE_IP}:10000/sony`);
+const api = new SonyRpcApi(`http://${process.env.DEVICE_IP}:10000/sony`);
 
 api.setVolume(0)
   .then(() => api.setClearAudioPlusSoundField())

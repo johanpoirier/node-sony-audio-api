@@ -1,4 +1,4 @@
-const Api = require('./api')
+import { SonyRpcApi } from './lib/SonyRpcApi.js'
 //const ApiNotifications = require('./api-notifications');
 
 if (!process.env.DEVICE_IP) {
@@ -6,10 +6,19 @@ if (!process.env.DEVICE_IP) {
   process.exit();
 }
 
-const api = new Api(`http://${process.env.DEVICE_IP}:10000/sony`);
+const apiClient = new SonyRpcApi(`http://${process.env.DEVICE_IP}:10000/sony`);
 
 // Power Status
-api.getPowerStatus().then(console.log);
+const powerStatus = await apiClient.getPowerStatus();
+console.log(powerStatus);
+
+// Current content
+const playingContent = await apiClient.getPlayingContentInfo();
+console.log(playingContent);
+
+// Current content
+const volume = await apiClient.getVolume();
+console.log(volume);
 
 // Spotify Mode
 // api.setVolume(0)
